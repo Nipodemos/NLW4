@@ -1,9 +1,13 @@
+import 'reflect-metadata';
 import express from 'express';
+import '../database';
+import router from './routes';
 
 const app = express();
 
-app.get('/users', (request, response) => response.send({ message: 'Hello World - NLW4' }));
-app.post('/', (request, response) => response.json({ message: 'Os dados foram salvos com sucesso' }));
+app.use(express.json());
+app.use(router);
+
 app.listen(3333, () => {
   console.log('Servidor aberto em http://localhost:3333');
 });
