@@ -1,5 +1,4 @@
 import nodemailer, { Transporter } from 'nodemailer';
-import { resolve } from 'path';
 import handlebars from 'handlebars';
 import fs from 'fs';
 
@@ -31,7 +30,6 @@ class SendMailService {
   ): Promise<void> {
     const templateFileContent = fs.readFileSync(path).toString('utf-8');
     const mailTemplateParsed = handlebars.compile(templateFileContent);
-    console.log('variables.link :>> ', variables.link);
     const html = mailTemplateParsed(variables);
     const message = await this.client.sendMail({
       to,
