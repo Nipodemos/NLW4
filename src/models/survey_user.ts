@@ -2,11 +2,15 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
+  ManyToOne,
   PrimaryColumn,
   UpdateDateColumn,
 } from 'typeorm';
 
 import { v4 as uuid } from 'uuid';
+import Survey from './survey';
+import User from './user';
 
 @Entity('surveys_users')
 export default class SurveyUser {
@@ -18,6 +22,14 @@ export default class SurveyUser {
 
   @Column({ name: 'user_id' })
   userId: string;
+
+  @ManyToOne(() => User)
+  @JoinColumn({ name: 'user_id' })
+  user: User;
+
+  @ManyToOne(() => Survey)
+  @JoinColumn({ name: 'survey_id' })
+  survey: Survey;
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
