@@ -4,9 +4,10 @@ import { SurveyUserRepository } from '@repositories/survey_user';
 import { UserRepository } from '@repositories/user';
 import { getCustomRepository } from 'typeorm';
 import { resolve } from 'path';
-import SendMailService from 'src/services/send_mail';
+import AppError from 'src/errors/app_errors';
+import SendMailService from '../services/send_mail';
 
-class SendMailController {
+export default class SendMailController {
   async execute(request: Request, response: Response): Promise<Response> {
     const { email, survey_id: surveyId } = request.body;
 
@@ -17,18 +18,18 @@ class SendMailController {
     const user = await userRepository.findOne({ email });
 
     if (!user) {
-      return response.status(400).json({ error: 'User does not exist' });
+      throw new AppError('User does not exist!');
     }
 
     const survey = await surveyRepository.findOne({ id: surveyId });
 
     if (!survey) {
-      return response.status(400).json({ error: 'User does not exists' });
+      throw new AppError('User does not exists!');
     }
 
     let surveyUser = await surveyUserRepository.findOne({
-      where: [{ userId: user.id }, { value: null }],
-      relations: ['user', 'survey '],
+      where: { userId: user.id, value: null },
+      relations: ['user', 'survey'],
     });
 
     if (!surveyUser) {
@@ -45,7 +46,7 @@ class SendMailController {
       name: user.name,
       title: survey.title,
       description: survey.description,
-      user_id: user.id,
+      id: surveyUser.id,
       link: process.env.URL_MAIL,
     };
 
@@ -53,5 +54,3 @@ class SendMailController {
     return response.json(surveyUser);
   }
 }
-
-export default SendMailController;

@@ -29,7 +29,9 @@
       }
     ],
     "class-methods-use-this": "off",
-    "import/prefer-default-export": "off"
+    "import/prefer-default-export": "off",
+    "operator-linebreak": "off",
+    "no-unused-vars": ["warn", { "varsIgnorePattern": "_+" }]
   },
   "settings": {
     "import/resolver": {
